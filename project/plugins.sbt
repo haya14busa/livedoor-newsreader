@@ -1,3 +1,11 @@
+scalacOptions ++= Seq(
+  "-Xlint",
+  "-unchecked", "-deprecation", "-feature",
+  "-language:postfixOps",
+  "-language:reflectiveCalls",
+  "-encoding", "utf8"
+)
+
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.0")
 
