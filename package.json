@@ -1,0 +1,22 @@
+{
+  "name": "livedoor-newsreader",
+  "version": "1.0.0",
+  "description": "livedoor news reader :newspaper:",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/haya14busa/livedoor-newsreader.git"
+  },
+  "author": "haya14busa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/haya14busa/livedoor-newsreader/issues"
+  },
+  "homepage": "https://github.com/haya14busa/livedoor-newsreader"
+}
