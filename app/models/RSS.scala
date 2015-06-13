@@ -1,4 +1,5 @@
 package models
+import play.api.libs.json.Json
 
 case class Article(
   guid:        String,
@@ -16,6 +17,9 @@ case class Feed(
 )
 
 object Article {
+  import utils.json.URL.dateJsonWrites
+  implicit val articleWrites = Json.writes[Article]
+
   def fromXml(item: scala.xml.Node): Article = {
     Article(
       guid = (item \ "guid").text,
@@ -28,6 +32,9 @@ object Article {
 }
 
 object Feed {
+  import utils.json.URL.dateJsonWrites
+  implicit val feedWrites = Json.writes[Feed]
+
   def fromXml(root: scala.xml.Node): Feed = {
     val channel = root \ "channel"
     Feed(
