@@ -46,3 +46,11 @@ testScalastyle := {
 }
 
 (test in Test) <<= (test in Test) dependsOn testScalastyle
+
+// Gulp integration
+// TODO:
+//  - ignoring produced files by gulp with .gitignore & compile them before
+//    `sbt compile` & `sbt dist`?
+//  - support `controllers.Assets.versioned`?
+//    ref: http://d.hatena.ne.jp/nazoking/20141207/1417964951
+play.sbt.PlayImport.PlayKeys.playRunHooks += RunSubProcess("gulp watch")
