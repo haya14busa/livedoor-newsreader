@@ -7,7 +7,13 @@ import play.api.mvc._
 class Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index(feed().toString))
+  }
+
+  def feed() = {
+    val url = "http://news.livedoor.com/topics/rss/top.xml"
+    val feed = models.Feed.fromXml(scala.xml.XML.load(url))
+    feed
   }
 
 }
