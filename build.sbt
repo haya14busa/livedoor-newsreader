@@ -32,3 +32,12 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
+
+// Create a default Scala style task to run with tests
+lazy val testScalastyle = taskKey[Unit]("testScalastyle")
+
+testScalastyle := {
+  org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Test).toTask("").value
+}
+
+(test in Test) <<= (test in Test) dependsOn testScalastyle
