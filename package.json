@@ -18,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/haya14busa/livedoor-newsreader/issues"
   },
-  "homepage": "https://github.com/haya14busa/livedoor-newsreader"
+  "homepage": "https://github.com/haya14busa/livedoor-newsreader",
+  "devDependencies": {
+    "browser-sync": "^2.7.10",
+    "coffee-script": "^1.9.3",
+    "gulp": "^3.9.0"
+  }
 }
