@@ -1,3 +1,4 @@
+// scalastyle:off public.methods.have.type for Action in controllers
 package controllers
 
 import play.api._
