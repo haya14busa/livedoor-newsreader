@@ -35,6 +35,8 @@ module.exports = {
         }
       ]
     }
+    devtool: 'inline-source-map'
+    watch: true
 
   watch:
     js: js.src

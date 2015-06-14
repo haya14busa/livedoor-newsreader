@@ -25,7 +25,7 @@ gulp.task 'browser-sync', ->
     # Important: you need to specify the path on your source code
     # not the path on the url
     # files: [config.watch.js, config.watch.less, config.watch.html]
-    files: [config.dest + '/**/*' config.watch.html]
+    files: [config.dest + '/**/*', config.watch.html]
   }
 
 gulp.task 'watch', ['browser-sync'], ->
