@@ -6,7 +6,7 @@
 GET     /                           controllers.Application.index
 
 GET     /api/categories             controllers.API.categories
-GET     /api/feeds/:category        controllers.API.feeds(category: String)
+GET     /api/feed/:cgid             controllers.API.feed(cgid: String)
 GET     /api/article/:guid          controllers.API.article(guid: String)
 GET     /api/article/:guid/related  controllers.API.relatedArticles(guid: String)
 

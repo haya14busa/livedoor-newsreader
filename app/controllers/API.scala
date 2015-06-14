@@ -11,7 +11,14 @@ class API extends Controller {
     Ok(Json.toJson(models.Categories.categories))
   }
 
-  def feeds(category: String) = TODO
+  def feed(cgid: String) = Action {
+    // TODO: better error handling
+    (for {
+      category <- models.Categories.categories.find(_.cgid == cgid)
+      feed <- models.Feed.fromXml(scala.xml.XML.load(category.rss))
+    } yield feed).fold[Result](NotFound) { f => Ok(Json.toJson(f)) }
+  }
+
   def article(guid: String) = TODO
   def relatedArticles(guid: String) = TODO
 

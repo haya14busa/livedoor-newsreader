@@ -50,7 +50,7 @@ object Feed {
 }
 
 case class Category(
-  id:    String,
+  cgid:  String, // CateGory ID
   rss:   java.net.URL,
   order: Int
 )
@@ -86,8 +86,8 @@ object Categories {
         ("trend", "http://news.livedoor.com/topics/rss/trend.xml")
       ).zipWithIndex
     } yield {
-      val (id, rss) = t
-      Category(id, new java.net.URL(rss), order)
+      val (cgid, rss) = t
+      Category(cgid, new java.net.URL(rss), order)
     }
 }
 
