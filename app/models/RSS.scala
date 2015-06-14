@@ -13,7 +13,7 @@ case class Article(
 case class Feed(
   title:         String,
   description:   String,
-  lastBuildDate: java.util.Date,
+  lastBuildDate: Option[java.util.Date],
   articles:      Seq[Article]
 )
 
@@ -43,15 +43,15 @@ object Feed {
     Feed(
       title = (channel \ "title").text,
       description = (channel \ "description").text,
-      lastBuildDate = utils.Date.parseRFC2822((channel \ "lastBuildDate").text),
+      lastBuildDate = allCatch opt { utils.Date.parseRFC2822((channel \ "lastBuildDate").text) },
       articles = (channel \ "item") flatMap Article.fromXml
     )
   }
 }
 
 case class Category(
-  id: String,
-  rss: java.net.URL,
+  id:    String,
+  rss:   java.net.URL,
   order: Int
 )
 
