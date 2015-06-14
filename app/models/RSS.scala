@@ -1,5 +1,6 @@
 package models
 import play.api.libs.json.Json
+import scala.util.control.Exception.allCatch
 
 case class Article(
   guid:        String,
@@ -20,7 +21,8 @@ object Article {
   import utils.json.URL.dateJsonWrites
   implicit val articleWrites = Json.writes[Article]
 
-  def fromXml(item: scala.xml.Node): Article = {
+  // TODO?: return as Either[Throwable, T]
+  def fromXml(item: scala.xml.Node): Option[Article] = allCatch opt {
     Article(
       guid = (item \ "guid").text,
       title = (item \ "title").text,
@@ -35,13 +37,14 @@ object Feed {
   import utils.json.URL.dateJsonWrites
   implicit val feedWrites = Json.writes[Feed]
 
-  def fromXml(root: scala.xml.Node): Feed = {
+  // TODO?: return as Either[Throwable, T]
+  def fromXml(root: scala.xml.Node): Option[Feed] = allCatch opt {
     val channel = root \ "channel"
     Feed(
       title = (channel \ "title").text,
       description = (channel \ "description").text,
       lastBuildDate = utils.Date.parseRFC2822((channel \ "lastBuildDate").text),
-      articles = (channel \ "item") map Article.fromXml
+      articles = (channel \ "item") flatMap Article.fromXml
     )
   }
 }
