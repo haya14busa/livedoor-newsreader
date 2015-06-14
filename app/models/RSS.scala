@@ -49,3 +49,45 @@ object Feed {
   }
 }
 
+case class Category(
+  id: String,
+  rss: java.net.URL,
+  order: Int
+)
+
+object Category {
+  import utils.json.URL.dateJsonWrites
+  implicit val categoryWrites = Json.writes[Category]
+}
+
+object Categories {
+  // 主要     : http://news.livedoor.com/topics/rss/top.xml
+  // 国内     : http://news.livedoor.com/topics/rss/dom.xml
+  // 海外     : http://news.livedoor.com/topics/rss/int.xml
+  // IT 経済  : http://news.livedoor.com/topics/rss/eco.xml
+  // 芸能     : http://news.livedoor.com/topics/rss/ent.xml
+  // スポーツ : http://news.livedoor.com/topics/rss/spo.xml
+  // 映画     : http://news.livedoor.com/rss/summary/52.xml
+  // グルメ   : http://news.livedoor.com/topics/rss/gourmet.xml
+  // 女子     : http://news.livedoor.com/topics/rss/love.xml
+  // トレンド : http://news.livedoor.com/topics/rss/trend.xml
+  val categories: List[Category] =
+    for {
+      (t, order) <- List(
+        ("top", "http://news.livedoor.com/topics/rss/top.xml"),
+        ("dom", "http://news.livedoor.com/topics/rss/dom.xml"),
+        ("int", "http://news.livedoor.com/topics/rss/int.xml"),
+        ("eco", "http://news.livedoor.com/topics/rss/eco.xml"),
+        ("ent", "http://news.livedoor.com/topics/rss/ent.xml"),
+        ("spo", "http://news.livedoor.com/topics/rss/spo.xml"),
+        ("movie", "http://news.livedoor.com/rss/summary/52.xml"),
+        ("gourmet", "http://news.livedoor.com/topics/rss/gourmet.xml"),
+        ("love", "http://news.livedoor.com/topics/rss/love.xml"),
+        ("trend", "http://news.livedoor.com/topics/rss/trend.xml")
+      ).zipWithIndex
+    } yield {
+      val (id, rss) = t
+      Category(id, new java.net.URL(rss), order)
+    }
+}
+

@@ -7,7 +7,10 @@ import play.api.libs.json.Json
 
 class API extends Controller {
 
-  def categories = TODO
+  def categories = Action {
+    Ok(Json.toJson(models.Categories.categories))
+  }
+
   def feeds(category: String) = TODO
   def article(guid: String) = TODO
   def relatedArticles(guid: String) = TODO
