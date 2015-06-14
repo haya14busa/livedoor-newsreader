@@ -1,14 +1,13 @@
-class Cat {
+import React from 'react'
+import { Router, Route, Link } from 'react-router'
 
-  constructor(name) {
-    this.name = name
+class HelloWorld extends React.Component {
+  render() {
+    return <p>Hello, world!</p>
   }
-
-  meow() {
-    console.log( this.name + 'はミャオと鳴きました' )
-  }
-
 }
 
-var cat = new Cat('tama')
-cat.meow()
+React.render(
+  <HelloWorld />,
+  document.getElementById('react-app')
+)
