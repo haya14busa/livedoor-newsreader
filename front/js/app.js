@@ -5,7 +5,7 @@ class Cat {
   }
 
   meow() {
-    alert( this.name + 'はミャオと鳴きました' )
+    console.log( this.name + 'はミャオと鳴きました' )
   }
 
 }

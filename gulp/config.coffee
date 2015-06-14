@@ -37,9 +37,8 @@ module.exports = {
     }
 
   watch:
-    files:
-      js: js.src
-      less: less.src
-      html: 'app/views/**/*.html'
+    js: js.src
+    less: less.src
+    html: 'app/views/**/*.html'
 
 }

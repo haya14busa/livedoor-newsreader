@@ -13,6 +13,8 @@ gulp.task 'webpack', ->
 
 gulp.task 'browser-sync', ->
   # ref: http://pauldijou.fr/blog/2014/08/05/browser-sync-play-framework/
+  if browserSync.active
+    return
   browserSync.init {
     # By default, Play is listening on port 9000
     proxy: 'localhost:9000',
@@ -22,7 +24,9 @@ gulp.task 'browser-sync', ->
     # Reload all assets
     # Important: you need to specify the path on your source code
     # not the path on the url
-    files: [config.watch.js, config.watch.less, config.watch.html]
+    # files: [config.watch.js, config.watch.less, config.watch.html]
+    files: [config.dest + '/**/*' config.watch.html]
   }
 
-gulp.task('watch', ['browser-sync', 'webpack'])
+gulp.task 'watch', ['browser-sync'], ->
+  gulp.watch config.watch.js, [webpack]
