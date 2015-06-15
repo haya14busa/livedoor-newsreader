@@ -5,3 +5,10 @@ jdk:
   - oraclejdk8
 script:
   - sbt test
+  - sbt buildAssetsWithCLI
+  - sbt stage
+after_success:
+  - sbt deployHeroku
+env:
+  global:
+    - secure: TcFwB9stKeJ/IfS4H3sMBdV5tezPEQg4brEH1NvXO9L+CREzkmnDEEx4sRbTiHAITJMuVFHrEpznFcwmnqi0EzznLL5RXxR0kqf6OPlaSz3+bkL/hH+fH8Sh4o9ycMpdA3bQS4soWWSkTudXxqTSTHgiuXTpQPfDgOglJ6UohpSO+pUirBK1HgL7e6xflbpmOTSUzxBwPdh9GvnH1gv42Z5Q4E8DhwExCPw36stlBSCyrb/RMtR+v13j33w0cDi4Tz4QeWEGO7jXqUAI7DbBy56nfNZ3qaElk4iZGybHtTopyIwc/4pd5k6ioPoP/DIlnwAiAQlbH8+8ruI7aTZ/mgjLkb4XSc7vRr5VXyE0Mdvc9z1OV5HEVhFNwdqP1ULzUnucD0c1tsRS2sYHVZANRW41mn+auMl0Sii3LMt3T3o6Paj4ZNgar465x1NIiJmzFIOQtjj3Ja8iHnXezLayJh8QV2NzNiW3dLKvIX89WVtkf3EXgYFZCDmld1nYrzVE3Myp2VUafUIBnOpbwyPLvhbBOnUVezbE5YTBtuL1rveHVYjk53tgXRqTUCOmXw2SUs1A0KyN69f32+Y0AbvSLxVfDSBNrlqlNv5Hiug55sHuw2/aMOtr5nt2Xicu0Igds/MVy3eOgppcs8xP04XIcx/G18wk8mHqB+HLYK6g3yE=
