@@ -21,6 +21,7 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.0")
 // Custom --
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.7.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
+addSbtPlugin("jp.leafytree.sbt" % "sbt-phantomjs" % "0.1.4")
 
 // heroku
 // https://devcenter.heroku.com/articles/deploy-scala-and-play-applications-to-heroku-from-travis-ci

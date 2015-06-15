@@ -4,7 +4,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (
   project in file(".")
-  enablePlugins PlayScala
+  enablePlugins (PlayScala, PhantomJs)
   settings (
     scalacOptions ++= Seq(
       "-Xlint",
@@ -25,7 +25,11 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
-  "org.atilika.kuromoji" % "kuromoji" % "0.7.7"
+  "org.atilika.kuromoji" % "kuromoji" % "0.7.7",
+  "org.apache.spark" %% "spark-core" % "1.4.0",
+  // https://github.com/detro/ghostdriver/issues/397
+  // official: "com.github.detro.ghostdriver" % "phantomjsdriver" % "1.1.0" % "test"
+  "com.codeborne" % "phantomjsdriver" % "1.2.1" % "test"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
@@ -65,3 +69,6 @@ buildAssetsWithCLI := {
 
 // heroku
 herokuAppName in Compile := "livedoor-newsreader"
+
+// For PhantomJs
+javaOptions in Test ++= PhantomJs.setup(baseDirectory.value)
