@@ -62,3 +62,5 @@ buildAssetsWithCLI := {
 
 // Run buildAssetsWithCLI before `sbt dist`
 (packageBin in Universal) <<= (packageBin in Universal) dependsOn buildAssetsWithCLI
+
+herokuAppName in Compile := "livedoor-newsreader"
