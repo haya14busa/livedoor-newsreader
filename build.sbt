@@ -26,7 +26,11 @@ libraryDependencies ++= Seq(
   ws,
   specs2 % Test,
   "org.atilika.kuromoji" % "kuromoji" % "0.7.7",
-  "org.apache.spark" %% "spark-core" % "1.4.0",
+  // Thereare some confliction with this version
+  // "org.apache.spark" %% "spark-core" % "1.4.0",
+  // "org.apache.spark" %% "spark-mllib" % "1.4.0",
+  "org.apache.spark" %% "spark-core" % "1.3.1",
+  "org.apache.spark" %% "spark-mllib" % "1.3.1",
   // https://github.com/detro/ghostdriver/issues/397
   // official: "com.github.detro.ghostdriver" % "phantomjsdriver" % "1.1.0" % "test"
   "com.codeborne" % "phantomjsdriver" % "1.2.1" % "test"
