@@ -3,14 +3,22 @@ scala:
   - 2.11.6
 jdk:
   - oraclejdk8
+cache: # http://d.hatena.ne.jp/xuwei/20150115/1421287447
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot
 before_script:
   - npm install
 script:
-  - sbt test
-  - sbt buildAssetsWithCLI
-  - sbt stage
+  - sbt ++$TRAVIS_SCALA_VERSION buildAssetsWithCLI
+  - sbt ++$TRAVIS_SCALA_VERSION test
+  - sbt ++$TRAVIS_SCALA_VERSION stage
 after_success:
-  - sbt deployHeroku
+  - sbt ++$TRAVIS_SCALA_VERSION deployHeroku
+after_script:
+  # Tricks to avoid unnecessary cache updates
+  - find $HOME/.sbt -name "*.lock" | xargs rm
+  - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 env:
   global:
     secure: dpGX6ujKgeEI2TrE63iTAkD590jITfG1L8AY1FW3Q9Wfnj4Yw+CSNkeLssbDUhRr2mqBN/dp2xUbDJ4v0XSfOJzU15tkCD/Ife9ba90GMDIeXOumEMtqKN0bao61tWX2MyQGtJT6n5FCVyNgY5Dnk0GmS29ii8ztpbTgt0cTl/nQLDbJTt7G3GfxdDPA7P9MoBByfbVl7IM+WMEgtWCIrk3U4CIGj2ei5XBBBh3HqgdtAJ37Mj3sxTroDN03zXjbZ1UTRkRAMDut3+6so/KTUV+gbFyedUbO0h4lj6p+AnNx0SPiqzfah1qBC7CYkEqAcy4OF9mepqIvVaxbTEcmRuK4Pgz5iO/Dk5VUvZHPp4Lknb7DytdjUyW0Lv8zgMKHqXTlm47D+E4uMfyQT7DWT0Ww2TydD4Qxx8QXOZCZTKVtwf/4U2F/s4CCfHUX4+M/TrBH7ED2KEDIhqCRyRROq9BZhK7nhBKXIe5I+v0xZ7MjiA/x1YYVQZ675igB/5GxTZyxUpau4GQCw1nueNY5sCzTkBOm7kgbDD2jr6kbkqsDAjWSDEjmP2QDvVhtF41HGCrdOlyLAKDs2KBzu8NPsUdUIhSMpJ751tRzKeOkd2DoDN24jB3K28hHyX2vc3exY4ktjbVmuRXU9U5mLGQEwcCKPIQukx/f5ZJ5ej9DxJk=
