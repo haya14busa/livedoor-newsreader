@@ -24,10 +24,12 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
-  specs2 % Test
+  specs2 % Test,
+  "org.atilika.kuromoji" % "kuromoji" % "0.7.7"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += "Atilika Open Source repository" at "http://www.atilika.org/nexus/content/repositories/atilika" // for kuromoji
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
