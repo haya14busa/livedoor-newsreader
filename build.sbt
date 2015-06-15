@@ -50,9 +50,15 @@ testScalastyle := {
 (test in Test) <<= (test in Test) dependsOn testScalastyle
 
 // Gulp integration
-// TODO:
-//  - ignoring produced files by gulp with .gitignore & compile them before
-//    `sbt compile` & `sbt dist`?
 //  - support `controllers.Assets.versioned`?
 //    ref: http://d.hatena.ne.jp/nazoking/20141207/1417964951
 play.sbt.PlayImport.PlayKeys.playRunHooks += RunSubProcess("gulp watch")
+
+lazy val buildAssetsWithCLI = taskKey[Unit]("Build assets files using CLI tools")
+
+buildAssetsWithCLI := {
+  "gulp dist" !
+}
+
+// Run buildAssetsWithCLI before `sbt dist`
+(packageBin in Universal) <<= (packageBin in Universal) dependsOn buildAssetsWithCLI

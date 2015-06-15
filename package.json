@@ -28,6 +28,7 @@
     "gulp": "^3.9.0",
     "gulp-plumber": "^1.0.1",
     "node-libs-browser": "^0.5.2",
+    "rimraf": "^2.4.0",
     "webpack": "^1.9.10",
     "webpack-stream": "^2.0.0"
   },

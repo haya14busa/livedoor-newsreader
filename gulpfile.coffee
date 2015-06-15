@@ -2,10 +2,11 @@ gulp = require 'gulp'
 browserSync = require('browser-sync').create()
 webpack = require 'webpack-stream'
 plumber = require 'gulp-plumber'
+rimraf = require 'rimraf'
 
 config = require './gulp/config.coffee'
 
-gulp.task 'webpack', ->
+gulp.task 'build:js', ->
   gulp.src(config.webpack.entry)
     .pipe(plumber())
     .pipe(webpack(config.webpack))
@@ -28,5 +29,11 @@ gulp.task 'browser-sync', ->
     files: [config.dest + '/**/*', config.watch.html]
   }
 
+gulp.task 'clean', (cb) -> rimraf(config.dest, cb)
+
+gulp.task 'build', ['build:js']
+
+gulp.task 'dist', ['clean', 'build']
+
 gulp.task 'watch', ['browser-sync'], ->
-  gulp.watch config.watch.js, [webpack]
+  gulp.watch config.watch.js, ['build:js']
