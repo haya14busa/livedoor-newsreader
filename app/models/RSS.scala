@@ -51,6 +51,7 @@ object Feed {
 
 case class Category(
   cgid:  String, // CateGory ID
+  name:  String,
   rss:   java.net.URL,
   order: Int
 )
@@ -74,20 +75,20 @@ object Categories {
   val categories: List[Category] =
     for {
       (t, order) <- List(
-        ("top", "http://news.livedoor.com/topics/rss/top.xml"),
-        ("dom", "http://news.livedoor.com/topics/rss/dom.xml"),
-        ("int", "http://news.livedoor.com/topics/rss/int.xml"),
-        ("eco", "http://news.livedoor.com/topics/rss/eco.xml"),
-        ("ent", "http://news.livedoor.com/topics/rss/ent.xml"),
-        ("spo", "http://news.livedoor.com/topics/rss/spo.xml"),
-        ("movie", "http://news.livedoor.com/rss/summary/52.xml"),
-        ("gourmet", "http://news.livedoor.com/topics/rss/gourmet.xml"),
-        ("love", "http://news.livedoor.com/topics/rss/love.xml"),
-        ("trend", "http://news.livedoor.com/topics/rss/trend.xml")
+        ("top", "主要", "http://news.livedoor.com/topics/rss/top.xml"),
+        ("dom", "国内", "http://news.livedoor.com/topics/rss/dom.xml"),
+        ("int", "海外", "http://news.livedoor.com/topics/rss/int.xml"),
+        ("eco", "IT 経済", "http://news.livedoor.com/topics/rss/eco.xml"),
+        ("ent", "芸能", "http://news.livedoor.com/topics/rss/ent.xml"),
+        ("spo", "スポー", "http://news.livedoor.com/topics/rss/spo.xml"),
+        ("movie", "映画", "http://news.livedoor.com/rss/summary/52.xml"),
+        ("gourmet", "グルメ", "http://news.livedoor.com/topics/rss/gourmet.xml"),
+        ("love", "女子", "http://news.livedoor.com/topics/rss/love.xml"),
+        ("trend", "トレンド", "http://news.livedoor.com/topics/rss/trend.xml")
       ).zipWithIndex
     } yield {
-      val (cgid, rss) = t
-      Category(cgid, new java.net.URL(rss), order)
+      val (cgid, name, rss) = t
+      Category(cgid, name, new java.net.URL(rss), order)
     }
 }
 
