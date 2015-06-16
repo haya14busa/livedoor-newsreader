@@ -6,7 +6,6 @@ import org.atilika.kuromoji.Token
 import scala.collection.immutable.Set
 
 object DocVector {
-  import scala.collection.JavaConversions._
 
   sealed abstract class Document
   case class RawDocument(id: Int, body: String) extends Document
@@ -16,21 +15,11 @@ object DocVector {
   type DF = Map[String, Int] // term -> document frequency
   type TFIDF = Map[String, Double] // term -> tfidf
 
-  private val tokenizer = Tokenizer.builder.mode(Tokenizer.Mode.NORMAL).build
-
-  private def tokenize(text: String): List[Token] = tokenizer.tokenize(text).toList
-
-  /** Filter out useless token like Conjunction */
-  private def isUseless(token: Token): Boolean =
-    token.getBaseForm == "hi" || token.getBaseForm == "hi2" || token.getBaseForm == null
-
-  private def unicodeNormalize = (str: String) => Normalizer.normalize(str, Normalizer.Form.NFKC)
-
   def tf(document: RawDocument): Map[String, Int] = tf(document.body)
 
   def tf(document: String): TF =
-    tokenize(unicodeNormalize(document))
-      .filterNot(isUseless)
+    MorphoAnalysis.tokenize(document)
+      .filter(MorphoAnalysis.isUsefull)
       .map(_.getSurfaceForm)
       .groupBy(_.toString).mapValues(_.length)
 
@@ -48,18 +37,35 @@ object DocVector {
   def tfidf(documents: List[RawDocument]): List[DocumentVector] = {
     val tfs: List[(RawDocument, TF)] = documents.map(doc => (doc, tf(doc)))
     val dfMap = dfs(tfs map (_._2))
-    println(dfMap)
-    tfs.map {
+    tfs map {
       case (doc, tf) =>
         val tfidf = tf.foldLeft[Map[String, Double]](Map()) { (m, tuple) => // tf value
           val (term: String, tfv: Int) = tuple
-          val idfv = idf(term, dfMap, documents.length)
-          // m + (term -> tfv * idf(term, dfMap, documents.length))
-          println(s"term: $term, tfv: $tfv, idfv:$idfv")
-          m + (term -> tfv * idfv)
+          m + (term -> tfv * idf(term, dfMap, documents.length))
         }
         DocumentVector(id = doc.id, body = doc.body, tfidf = tfidf)
     }
   }
+
+}
+
+object MorphoAnalysis {
+  import scala.collection.JavaConversions._
+
+  def tokenize(text: String): List[Token] =
+    tokenizer.tokenize(unicodeNormalize(text)).toList
+
+  private val tokenizer = Tokenizer.builder.mode(Tokenizer.Mode.NORMAL).build
+
+  private def partOfSpeech(token: Token) = token.getAllFeaturesArray().head
+
+  def isUsefull(token: Token): Boolean =
+    Set("名詞", "動詞") contains partOfSpeech(token)
+
+  /** Filter out useless token like Conjunction */
+  def isUseless(token: Token): Boolean =
+    Set("助詞", "接続詞") contains partOfSpeech(token)
+
+  private def unicodeNormalize = (str: String) => Normalizer.normalize(str, Normalizer.Form.NFKC)
 
 }
