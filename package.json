@@ -33,7 +33,10 @@
     "webpack-stream": "^2.0.0"
   },
   "dependencies": {
+    "browser-request": "^0.3.3",
     "react": "^0.13.3",
-    "react-router": "^0.13.3"
+    "react-router": "^0.13.3",
+    "request": "^2.58.0",
+    "whatwg-fetch": "^0.9.0"
   }
 }

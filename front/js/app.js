@@ -1,13 +1,75 @@
 import React from 'react'
 import { Router, Route, Link } from 'react-router'
 
-class HelloWorld extends React.Component {
+// My modules
+import store from './store.js'
+
+class RssReader extends React.Component {
   render() {
-    return <p>Hello, world!</p>
+    return (
+      <div>
+        <p>This is awesome Rss Reader</p>
+        <CategoryList />
+        <Feeds cgid="top"/>
+      </div>
+    )
   }
 }
 
+class CategoryList extends React.Component {
+  constructor() {
+    super() // XXX: 'this' is not allowed before super() ???
+    this.state = {
+      categories: []
+    }
+  }
+
+  componentDidMount() {
+    store.fetchCategories().then(categories =>{
+      this.setState({categories: categories})
+    })
+  }
+
+  render() {
+    const createItem = function(category, index) {
+      return <li key={`category-${index}-${category.cgid}`}>{category.name}</li>
+    }
+    return <p>{this.state.categories.map(createItem)}</p>
+  }
+}
+
+class Feeds extends React.Component {
+  constructor() {
+    super() // XXX: 'this' is not allowed before super() ???
+    this.state = {
+      feed: {}
+    }
+  }
+
+  componentDidMount() {
+    store.fetchFeed(this.props.cgid).then(feed => {
+      this.setState({feed: feed})
+    })
+  }
+
+  render() {
+    const createSnipets = function(article, index) {
+      return (
+        <div>
+          <h3 id={`guid-${article.guid}`}>
+            <a href={article.link}>{article.title}</a>
+          </h3>
+        </div>
+      )
+    }
+    if ('articles' in this.state.feed) {
+      return <p>{this.state.feed.articles.map(createSnipets)}</p>
+    } else return <p>Loading...</p>
+  }
+}
+
+
 React.render(
-  <HelloWorld />,
+  <RssReader />,
   document.getElementById('react-app')
 )
