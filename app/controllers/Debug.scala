@@ -17,5 +17,21 @@ class Debug extends Controller {
     }.toString)
   }
 
+  def docvector(text: String) = Action {
+    // Ok(logics.DocVector.make(text).toString)
+    // Ok(logics.DocVector.wordCount(text).toString)
+    Ok(logics.DocVector.tf(text).toString)
+  }
+
+  def tfidf = Action {
+    import logics.DocVector.RawDocument
+    val docs = List(
+      RawDocument(1, "すいかとりんごとみかんを食べました．みかんは実際おいしい"),
+      RawDocument(2, "りんごとメロンとスイカを買いました"),
+      RawDocument(3, "りんごとバナナとナスをもらいました")
+    )
+    Ok(logics.DocVector.tfidf(docs).toString)
+  }
+
 }
 
