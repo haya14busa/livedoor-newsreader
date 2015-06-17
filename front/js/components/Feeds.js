@@ -35,7 +35,11 @@ export default class Feeds extends React.Component {
       )
     }
     if ('articles' in this.state.feed) {
-      return <ul>{this.state.feed.articles.map(createSnipets)}</ul>
+      return (
+        <div id="feeds-view">
+          <ul>{this.state.feed.articles.map(createSnipets)}</ul>
+        </div>
+      )
     } else return <p>Loading...</p>
   }
 }

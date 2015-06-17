@@ -26,7 +26,11 @@ export default class CategoryList extends React.Component {
         </li>
       )
     }
-    return <ul>{this.state.categories.map(createItem)}</ul>
+    return (
+      <nav id='category-navbar'>
+        <ul>{this.state.categories.map(createItem)}</ul>
+      </nav>
+    )
   }
 }
 

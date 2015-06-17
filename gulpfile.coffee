@@ -3,6 +3,7 @@ browserSync = require('browser-sync').create()
 webpack = require 'webpack-stream'
 plumber = require 'gulp-plumber'
 rimraf = require 'rimraf'
+less = require 'gulp-less'
 
 config = require './gulp/config.coffee'
 
@@ -11,6 +12,12 @@ gulp.task 'build:js', ->
     .pipe(plumber())
     .pipe(webpack(config.webpack))
     .pipe(gulp.dest(config.js.dest))
+
+gulp.task 'build:less', ->
+  gulp.src(config.less.src)
+    .pipe(plumber())
+    .pipe(less())
+    .pipe(gulp.dest(config.less.dest))
 
 gulp.task 'browser-sync', ->
   # ref: http://pauldijou.fr/blog/2014/08/05/browser-sync-play-framework/
@@ -31,9 +38,10 @@ gulp.task 'browser-sync', ->
 
 gulp.task 'clean', (cb) -> rimraf(config.dest, cb)
 
-gulp.task 'build', ['build:js']
+gulp.task 'build', ['build:js', 'build:less']
 
 gulp.task 'dist', ['clean', 'build']
 
 gulp.task 'watch', ['browser-sync'], ->
   gulp.watch config.watch.js, ['build:js']
+  gulp.watch config.watch.less, ['build:less']
