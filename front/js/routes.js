@@ -1,9 +1,11 @@
 import React from 'react'
 import { Route } from 'react-router'
 
-import RssReader from './RSS.js'
+import Feeds from './components/Feeds.js'
+import App from './app.js'
 
 export default (
-  <Route name='rss' path='/' handler={RssReader}>
+  <Route name='rss' path='/' handler={App}>
+    <Route name='feed' path='feed/:cgid' handler={Feeds} />
   </Route>
 )

@@ -1,10 +1,14 @@
 import React from 'react'
 import { RouteHandler } from 'react-router';
+import CategoryList from './components/CategoryList.js'
 
 export default class App {
   render() {
-    <div>
-      <RouteHandler {...this.props} />
-    </div>
+    return (
+      <div>
+        <CategoryList cgid="top"/>
+        <RouteHandler {...this.props} />
+      </div>
+    )
   }
 }
