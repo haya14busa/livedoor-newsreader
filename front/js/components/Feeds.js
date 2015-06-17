@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 import store from '../store.js'
 
 // TODO: Remove store from this file
@@ -28,13 +29,13 @@ export default class Feeds extends React.Component {
   render() {
     const createSnipets = function(article, index) {
       return (
-        <h3 id={`guid-${article.guid}`} key={`article-${index}-${article.guid}`}>
-          <a href={article.link}>{article.title}</a>
-        </h3>
+        <li id={`guid-${article.guid}`} key={`article-${index}-${article.guid}`}>
+          <Link to='article' params={{guid: article.guid}}>{article.title}</Link>
+        </li>
       )
     }
     if ('articles' in this.state.feed) {
-      return <p>{this.state.feed.articles.map(createSnipets)}</p>
+      return <ul>{this.state.feed.articles.map(createSnipets)}</ul>
     } else return <p>Loading...</p>
   }
 }

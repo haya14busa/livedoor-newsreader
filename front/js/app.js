@@ -7,6 +7,7 @@ export default class App {
     return (
       <div>
         <CategoryList cgid="top"/>
+        <hr />
         <RouteHandler {...this.props} />
       </div>
     )
