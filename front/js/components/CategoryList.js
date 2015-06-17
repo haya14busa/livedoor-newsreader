@@ -11,7 +11,7 @@ export default class CategoryList extends React.Component {
   }
 
   componentDidMount() {
-    store.fetchCategories().then(categories =>{
+    store.getCategories().then(categories =>{
       this.setState({categories: categories})
     })
   }

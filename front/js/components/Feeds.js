@@ -13,7 +13,7 @@ export default class Feeds extends React.Component {
   }
 
   updateFeed(cgid) {
-    store.fetchFeed(cgid).then(feed => {
+    store.getFeed(cgid).then(feed => {
       this.setState({feed: feed})
     })
   }

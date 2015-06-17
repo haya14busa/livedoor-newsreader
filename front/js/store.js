@@ -3,6 +3,10 @@ import "babel/polyfill"
 import 'whatwg-fetch'
 import _ from 'lodash'
 
+function returnAsPromise(data) {
+  return new Promise((resolve, reject) => resolve(data))
+}
+
 class Store {
   // Ref: app/models/RSS.scala
 
@@ -14,10 +18,10 @@ class Store {
     }
   }
 
-  fetchAll() {
+  getAll() {
     var self = this
-    return this.fetchCategories().then(cgs => {
-      return Promise.all(cgs.map(cg => self.fetchFeed(cg.cgid))).then(_ => self.data)
+    return this.getCategories().then(cgs => {
+      return Promise.all(cgs.map(cg => self.getFeed(cg.cgid))).then(_ => self.data)
     })
   }
 
@@ -31,22 +35,34 @@ class Store {
     )
   }
 
+  getCategories() {
+    if (this.data.categories.length > 0)
+      return returnAsPromise(this.data.categories)
+    else return this.fetchCategories()
+  }
+
   fetchFeed(cgid) {
     var self = this
     return fetch(`/api/feed/${cgid}`).then(response =>
       response.json().then(json => {
         self.data.feed[cgid] = json
-        self.data.articles.concat(json.articles)
+        self.data.articles = self.data.articles.concat(json.articles)
         return json
       })
     )
   }
 
+  getFeed(cgid) {
+    if (cgid in this.data.feed)
+      return returnAsPromise(this.data.feed[cgid])
+    else
+      return this.fetchFeed(cgid)
+  }
+
   getArticles() {
-    var self = this
-    if (self.data.articles.length > 0)
-      return new Promise(_ => self.data.articles)
-    else return this.fetchAll().then(data => {
+    if (this.data.articles.length > 0)
+      return returnAsPromise(this.data.articles)
+    else return this.getAll().then(data => {
       return _.flatten(_.values(data.feed).map(feed => feed.articles))
     })
   }
