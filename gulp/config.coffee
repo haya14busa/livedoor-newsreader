@@ -20,7 +20,7 @@ module.exports = {
   less: less
 
   webpack:
-    entry: src + '/js/app.js'
+    entry: src + '/js/index.js'
     output:
       filename: 'bundle.js'
     resolve:

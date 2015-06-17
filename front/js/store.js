@@ -44,4 +44,4 @@ class Store {
 
 }
 
-module.exports = new Store
+export default new Store
