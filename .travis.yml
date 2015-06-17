@@ -3,6 +3,7 @@ scala:
   - 2.11.6
 jdk:
   - oraclejdk8
+sudo: false
 cache: # http://d.hatena.ne.jp/xuwei/20150115/1421287447
   directories:
     - $HOME/.ivy2/cache
