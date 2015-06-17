@@ -80,7 +80,7 @@ object Categories {
         ("int", "海外", "http://news.livedoor.com/topics/rss/int.xml"),
         ("eco", "IT 経済", "http://news.livedoor.com/topics/rss/eco.xml"),
         ("ent", "芸能", "http://news.livedoor.com/topics/rss/ent.xml"),
-        ("spo", "スポー", "http://news.livedoor.com/topics/rss/spo.xml"),
+        ("spo", "スポーツ", "http://news.livedoor.com/topics/rss/spo.xml"),
         ("movie", "映画", "http://news.livedoor.com/rss/summary/52.xml"),
         ("gourmet", "グルメ", "http://news.livedoor.com/topics/rss/gourmet.xml"),
         ("love", "女子", "http://news.livedoor.com/topics/rss/love.xml"),
