@@ -27,7 +27,8 @@ object Article {
   def fromXml(item: scala.xml.Node): Option[Article] = allCatch opt {
     val link = new java.net.URL((item \ "link").text)
     val guid = link.getPath.split("/").last.toLong
-    val (content, html) = logics.Scraper.article(guid).get
+    // val (content, html) = logics.Scraper.article(guid).get
+    val (content, html) = ("content", "html") // TODO: do not scrape in dev
     Article(
       guid = guid,
       title = (item \ "title").text,

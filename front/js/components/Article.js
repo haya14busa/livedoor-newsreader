@@ -24,6 +24,8 @@ export default class Article extends React.Component {
       <article>
         <h2>{this.state.article.title}</h2>
         <div dangerouslySetInnerHTML={{__html: this.state.article.description}}></div>
+        <hr />
+        <div dangerouslySetInnerHTML={{__html: this.state.article.html}}></div>
       </article>
     )
   }
