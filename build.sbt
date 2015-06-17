@@ -34,7 +34,9 @@ libraryDependencies ++= Seq(
   // https://github.com/detro/ghostdriver/issues/397
   // official: "com.github.detro.ghostdriver" % "phantomjsdriver" % "1.1.0" % "test"
   "com.codeborne" % "phantomjsdriver" % "1.2.1" % "test",
-  "org.jsoup" % "jsoup" % "1.7.2"
+  "org.jsoup" % "jsoup" % "1.7.2",
+  evolutions,
+  "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
