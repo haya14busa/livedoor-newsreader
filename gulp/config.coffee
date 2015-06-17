@@ -1,5 +1,8 @@
+path = require('path')
+
 dest = './public/_target'
 src = './front'
+relativeSrcPath = path.relative('.', src)
 
 js = {
   src: src + '/js/**/*.js'
@@ -39,8 +42,8 @@ module.exports = {
     # watch: true
 
   watch:
-    js: js.src
-    less: less.src
+    js: relativeSrcPath + '/js/**'
+    less: relativeSrcPath + '/less/**'
     html: 'app/views/**/*.html'
 
 }
