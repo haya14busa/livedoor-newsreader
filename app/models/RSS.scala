@@ -3,7 +3,7 @@ import play.api.libs.json.Json
 import scala.util.control.Exception.allCatch
 
 case class Article(
-  guid:        String,
+  guid:        Long,
   title:       String,
   description: String,
   pubDate:     java.util.Date,
@@ -23,12 +23,13 @@ object Article {
 
   // TODO?: return as Either[Throwable, T]
   def fromXml(item: scala.xml.Node): Option[Article] = allCatch opt {
+    val link = new java.net.URL((item \ "link").text)
     Article(
-      guid = (item \ "guid").text,
+      guid = link.getPath.split("/").last.toLong,
       title = (item \ "title").text,
       description = (item \ "description").text,
       pubDate = utils.Date.parseRFC2822((item \ "pubDate").text),
-      link = new java.net.URL((item \ "link").text)
+      link = link
     )
   }
 }
