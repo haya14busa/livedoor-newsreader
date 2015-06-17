@@ -7,7 +7,9 @@ case class Article(
   title:       String,
   description: String,
   pubDate:     java.util.Date,
-  link:        java.net.URL
+  link:        java.net.URL,
+  content:     String,
+  html:        String
 )
 
 case class Feed(
@@ -24,12 +26,16 @@ object Article {
   // TODO?: return as Either[Throwable, T]
   def fromXml(item: scala.xml.Node): Option[Article] = allCatch opt {
     val link = new java.net.URL((item \ "link").text)
+    val guid = link.getPath.split("/").last.toLong
+    val (content, html) = logics.Scraper.article(guid).get
     Article(
-      guid = link.getPath.split("/").last.toLong,
+      guid = guid,
       title = (item \ "title").text,
       description = (item \ "description").text,
       pubDate = utils.Date.parseRFC2822((item \ "pubDate").text),
-      link = link
+      link = link,
+      content = content,
+      html = html
     )
   }
 }
@@ -45,7 +51,7 @@ object Feed {
       title = (channel \ "title").text,
       description = (channel \ "description").text,
       lastBuildDate = allCatch opt { utils.Date.parseRFC2822((channel \ "lastBuildDate").text) },
-      articles = (channel \ "item") flatMap Article.fromXml
+      articles = (channel \ "item").par.map(Article.fromXml).flatten.seq
     )
   }
 }
