@@ -31,7 +31,9 @@ class API extends Controller {
     }
   }
 
-  def relatedArticles(guid: Long) = TODO
+  def relatedArticles(guid: Long) = Action.async {
+    dao.RelatedocsDAO.getRelatedArticles(guid) map (r => Ok(Json.toJson(r)))
+  }
 
   def crawl = Action {
     logics.Crawl.go()

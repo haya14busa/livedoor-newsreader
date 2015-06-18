@@ -14,7 +14,8 @@ class Store {
     this.data = {
       categories: [],
       feed: {}, // cgid: Feed
-      articles: []
+      articles: [],
+      relatedArticles: {} // guid: List[RelatedArticle]
     }
   }
 
@@ -64,6 +65,17 @@ class Store {
     return r ? returnAsPromise(r) : fetch(`/api/article/${guid}`).then(response =>
       response.json().then(json => {
         this.data.articles = this.data.articles.concat(json)
+        return json
+      })
+    )
+  }
+
+  findRelatedArticle(guid) {
+    return (guid in this.data.relatedArticles)
+      ? this.data.relatedArticles[guid]
+      : fetch(`/api/article/${guid}/related`).then(response =>
+        response.json().then(json => {
+        this.data.relatedArticles[guid] = json
         return json
       })
     )
