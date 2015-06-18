@@ -28,4 +28,28 @@ object Scraper {
     r
   }
 
+  def parseFeed(category: models.Category): Option[models.Feed] = allCatch opt {
+    val root = scala.xml.XML.load(category.rss)
+    val channel = root \ "channel"
+    models.Feed(
+      title = (channel \ "title").text,
+      description = (channel \ "description").text,
+      lastBuildDate = allCatch opt { utils.Date.parseRFC2822((channel \ "lastBuildDate").text) },
+      articles = (channel \ "item").flatMap(item => this.parseArticle(item, category))
+    )
+  }
+
+  def parseArticle(item: scala.xml.Node, category: models.Category): Option[models.RssArticle] = allCatch opt {
+    val link = new java.net.URL((item \ "link").text)
+    val guid = link.getPath.split("/").last.toLong
+    models.RssArticle(
+      guid = guid,
+      cgid = category.cgid,
+      title = (item \ "title").text,
+      description = (item \ "description").text,
+      pubdate = (utils.Date.parseRFC2822((item \ "pubDate").text)),
+      link = link
+    )
+  }
+
 }

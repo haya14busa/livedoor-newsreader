@@ -15,7 +15,7 @@ class API extends Controller {
     // TODO: better error handling
     (for {
       category <- models.Categories.categories.find(_.cgid == cgid)
-      feed <- models.Feed.fromXml(scala.xml.XML.load(category.rss))
+      feed <- logics.Scraper.parseFeed(category)
     } yield feed).fold[Result](NotFound) { f => Ok(Json.toJson(f)) }
   }
 

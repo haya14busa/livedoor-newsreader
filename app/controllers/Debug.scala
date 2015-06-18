@@ -37,7 +37,7 @@ class Debug extends Controller {
     val cgid = "top"
     (for {
       category <- models.Categories.categories.find(_.cgid == cgid)
-      feed <- models.Feed.fromXml(scala.xml.XML.load(category.rss))
+      feed <- logics.Scraper.parseFeed(category)
     } yield feed).fold[Result](NotFound) { feed =>
       feed.articles.par.flatMap(models.RssArticle.toArticle(_)).foreach(dao.ArticleDAO.insert)
       Ok(Json.toJson(feed))

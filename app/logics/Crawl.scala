@@ -64,6 +64,6 @@ object Crawl {
     Categories.categories.par.flatMap(this.getRssFeed)
 
   private def getRssFeed(category: Category): Option[Feed] =
-    Feed.fromXml(scala.xml.XML.load(category.rss))
+    logics.Scraper.parseFeed(category)
 
 }

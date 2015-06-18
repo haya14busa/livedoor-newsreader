@@ -17,6 +17,7 @@ case class Article(
 
 case class RssArticle(
   guid:        Long,
+  cgid:        String,
   title:       String,
   description: String,
   pubdate:     java.util.Date,
@@ -27,6 +28,7 @@ object RssArticle {
   import utils.json.URL.dateJsonWrites
   implicit val rssarticleWrites = Json.writes[RssArticle]
 
+  /** Scraping occurs! */
   def toArticle(r: RssArticle): Option[Article] = {
     logics.Scraper.article(r.guid) map {
       case (content, html, image) =>
@@ -54,59 +56,12 @@ case class Feed(
 object Article {
   import utils.json.URL.dateJsonWrites
   implicit val articleWrites = Json.writes[Article]
-
-  // TODO?: return as Either[Throwable, T]
-  def fromXml(item: scala.xml.Node): Option[Article] = allCatch opt {
-    val link = new java.net.URL((item \ "link").text)
-    val guid = link.getPath.split("/").last.toLong
-    val (content, html, image) = logics.Scraper.article(guid).get
-    Article(
-      guid = guid,
-      title = (item \ "title").text,
-      description = (item \ "description").text,
-      pubdate = (utils.Date.parseRFC2822((item \ "pubDate").text)),
-      link = link,
-      content = content,
-      html = html,
-      image = image
-    )
-  }
-
-  def guid(item: scala.xml.Node): Option[Long] = allCatch opt {
-    val link = new java.net.URL((item \ "link").text)
-    link.getPath.split("/").last.toLong
-  }
-
-  /** Scraping occurs! */
-  def toRssArticle(item: scala.xml.Node): Option[RssArticle] = allCatch opt {
-    val link = new java.net.URL((item \ "link").text)
-    val guid = link.getPath.split("/").last.toLong
-    RssArticle(
-      guid = guid,
-      title = (item \ "title").text,
-      description = (item \ "description").text,
-      pubdate = (utils.Date.parseRFC2822((item \ "pubDate").text)),
-      link = link
-    )
-  }
-
 }
 
 object Feed {
   import utils.json.URL.dateJsonWrites
   implicit val articleWrites = Json.writes[Article]
   implicit val feedWrites = Json.writes[Feed]
-
-  // TODO?: return as Either[Throwable, T]
-  def fromXml(root: scala.xml.Node): Option[Feed] = allCatch opt {
-    val channel = root \ "channel"
-    Feed(
-      title = (channel \ "title").text,
-      description = (channel \ "description").text,
-      lastBuildDate = allCatch opt { utils.Date.parseRFC2822((channel \ "lastBuildDate").text) },
-      articles = (channel \ "item").par.map(Article.toRssArticle).flatten.seq
-    )
-  }
 }
 
 case class Category(
