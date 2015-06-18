@@ -14,7 +14,7 @@ trait Tables {
   import slick.jdbc.{ GetResult => GR }
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema = Articles.schema ++ PlayEvolutions.schema
+  lazy val schema = Articles.schema ++ PlayEvolutions.schema ++ Relatedocs.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -100,4 +100,41 @@ trait Tables {
   }
   /** Collection-like TableQuery object for table PlayEvolutions */
   lazy val PlayEvolutions = new TableQuery(tag => new PlayEvolutions(tag))
+
+  /** Entity class storing rows of table Relatedocs
+   *  @param guid Database column guid SqlType(int8), PrimaryKey
+   *  @param rank1 Database column rank1 SqlType(int8), Default(None)
+   *  @param rank2 Database column rank2 SqlType(int8), Default(None)
+   *  @param rank3 Database column rank3 SqlType(int8), Default(None)
+   *  @param rank4 Database column rank4 SqlType(int8), Default(None)
+   *  @param rank5 Database column rank5 SqlType(int8), Default(None)
+   */
+  case class RelatedocsRow(guid: Long, rank1: Option[Long] = None, rank2: Option[Long] = None, rank3: Option[Long] = None, rank4: Option[Long] = None, rank5: Option[Long] = None)
+  /** GetResult implicit for fetching RelatedocsRow objects using plain SQL queries */
+  implicit def GetResultRelatedocsRow(implicit e0: GR[Long], e1: GR[Option[Long]]): GR[RelatedocsRow] = GR {
+    prs =>
+      import prs._
+      RelatedocsRow.tupled((<<[Long], <<?[Long], <<?[Long], <<?[Long], <<?[Long], <<?[Long]))
+  }
+  /** Table description of table relatedocs. Objects of this class serve as prototypes for rows in queries. */
+  class Relatedocs(_tableTag: Tag) extends Table[RelatedocsRow](_tableTag, "relatedocs") {
+    def * = (guid, rank1, rank2, rank3, rank4, rank5) <> (RelatedocsRow.tupled, RelatedocsRow.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(guid), rank1, rank2, rank3, rank4, rank5).shaped.<>({ r => import r._; _1.map(_ => RelatedocsRow.tupled((_1.get, _2, _3, _4, _5, _6))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column guid SqlType(int8), PrimaryKey */
+    val guid: Rep[Long] = column[Long]("guid", O.PrimaryKey)
+    /** Database column rank1 SqlType(int8), Default(None) */
+    val rank1: Rep[Option[Long]] = column[Option[Long]]("rank1", O.Default(None))
+    /** Database column rank2 SqlType(int8), Default(None) */
+    val rank2: Rep[Option[Long]] = column[Option[Long]]("rank2", O.Default(None))
+    /** Database column rank3 SqlType(int8), Default(None) */
+    val rank3: Rep[Option[Long]] = column[Option[Long]]("rank3", O.Default(None))
+    /** Database column rank4 SqlType(int8), Default(None) */
+    val rank4: Rep[Option[Long]] = column[Option[Long]]("rank4", O.Default(None))
+    /** Database column rank5 SqlType(int8), Default(None) */
+    val rank5: Rep[Option[Long]] = column[Option[Long]]("rank5", O.Default(None))
+  }
+  /** Collection-like TableQuery object for table Relatedocs */
+  lazy val Relatedocs = new TableQuery(tag => new Relatedocs(tag))
 }
