@@ -4,6 +4,7 @@ import models.Feed
 import models.{ Article, RssArticle }
 import models.{ Category, Categories }
 import models.RssArticle.toArticle
+import models.Tables.RelatedocsRow
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -31,9 +32,19 @@ object Crawl {
             existingArticles.map(ea => RawDocument(guid = ea._1, body = ea._2)).toList
         )
         dvs.par.foreach { dv =>
-          val relatedArticles = DocVector.findSimilarDocs(dv, dvs, n = 3)
+          val relatedArticles = DocVector.findSimilarDocs(dv, dvs, n = 5)
           play.Logger.info(s"[Similer #${dv.guid}] ${relatedArticles map (_.guid)}")
-          // TODO: insert related articles
+          val as = ((relatedArticles.map(r => Some(r.guid)) ::: List.fill[Option[Long]](5)(None)) take 5)
+          dao.RelatedocsDAO.upsert(
+            RelatedocsRow(
+              guid = dv.guid,
+              rank1 = as(0),
+              rank2 = as(1),
+              rank3 = as(2),
+              rank4 = as(3),
+              rank5 = as(4)
+            )
+          )
         }
         play.Logger.info("[Crawler] end tfidf calculation")
       }

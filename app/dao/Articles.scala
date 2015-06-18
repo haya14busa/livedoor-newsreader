@@ -8,7 +8,7 @@ import models.Article
 import models.Tables.ArticlesRow
 
 object ArticleDAO {
-  private val Articles = TableQuery[models.Tables.Articles]
+  val Articles = TableQuery[models.Tables.Articles]
   import ArticleDAOConvertion._
 
   def insert(article: Article): Future[Unit] = insert(convertArticleToRow(article))
