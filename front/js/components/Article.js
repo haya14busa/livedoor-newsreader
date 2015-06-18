@@ -38,27 +38,34 @@ export default class Article extends React.Component {
       )
     }
 
-    const createRelatedArticle = function(articles) {
-      if (articles.length > 0) {
+    const createRelatedArticle = function(article, relatedArticles) {
+      if (relatedArticles.length > 0 && article) {
         return (
           <div>
             <hr />
             <div>
-              <h5>関連記事</h5>
-              <ul>{articles.slice(0, 3).map(createRelatedArticleSnippets)}</ul>
+              <h5>{`「${article.title}」の関連記事`}</h5>
+              <ul>{relatedArticles.slice(0, 3).map(createRelatedArticleSnippets)}</ul>
             </div>
           </div>
         )
       }
     }
 
+    const image = function(article) {
+      if (image in article) {
+        return <img src={`${article.image}`} style={{float: 'right', margin: 20}} />
+      }
+    }
+
     return (
       <article>
-        <h2>{this.state.article.title}</h2>
-        <div dangerouslySetInnerHTML={{__html: this.state.article.description}}></div>
-        <hr />
+        <h2><a href={`${this.state.article.link}`}>{this.state.article.title}</a></h2>
+        {image(this.state.article)}
+        {/*<div dangerouslySetInnerHTML={{__html: this.state.article.description}}></div>*/}
+        {/*<hr />*/}
         <div dangerouslySetInnerHTML={{__html: this.state.article.html}}></div>
-        {createRelatedArticle(this.state.relatedArticles)}
+        {createRelatedArticle(this.state.article, this.state.relatedArticles)}
       </article>
     )
   }
