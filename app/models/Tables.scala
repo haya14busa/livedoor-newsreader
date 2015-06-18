@@ -20,6 +20,7 @@ trait Tables {
 
   /** Entity class storing rows of table Articles
    *  @param guid Database column guid SqlType(int8), PrimaryKey
+   *  @param cgid Database column cgid SqlType(varchar), Length(20,true)
    *  @param title Database column title SqlType(varchar), Length(200,true)
    *  @param description Database column description SqlType(varchar), Length(2000,true)
    *  @param pubdate Database column pubdate SqlType(timestamp)
@@ -28,21 +29,23 @@ trait Tables {
    *  @param html Database column html SqlType(text)
    *  @param image Database column image SqlType(varchar), Length(200,true), Default(None)
    */
-  case class ArticlesRow(guid: Long, title: String, description: String, pubdate: java.sql.Timestamp, link: String, content: String, html: String, image: Option[String] = None)
+  case class ArticlesRow(guid: Long, cgid: String, title: String, description: String, pubdate: java.sql.Timestamp, link: String, content: String, html: String, image: Option[String] = None)
   /** GetResult implicit for fetching ArticlesRow objects using plain SQL queries */
   implicit def GetResultArticlesRow(implicit e0: GR[Long], e1: GR[String], e2: GR[java.sql.Timestamp], e3: GR[Option[String]]): GR[ArticlesRow] = GR {
     prs =>
       import prs._
-      ArticlesRow.tupled((<<[Long], <<[String], <<[String], <<[java.sql.Timestamp], <<[String], <<[String], <<[String], <<?[String]))
+      ArticlesRow.tupled((<<[Long], <<[String], <<[String], <<[String], <<[java.sql.Timestamp], <<[String], <<[String], <<[String], <<?[String]))
   }
   /** Table description of table articles. Objects of this class serve as prototypes for rows in queries. */
   class Articles(_tableTag: Tag) extends Table[ArticlesRow](_tableTag, "articles") {
-    def * = (guid, title, description, pubdate, link, content, html, image) <> (ArticlesRow.tupled, ArticlesRow.unapply)
+    def * = (guid, cgid, title, description, pubdate, link, content, html, image) <> (ArticlesRow.tupled, ArticlesRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(guid), Rep.Some(title), Rep.Some(description), Rep.Some(pubdate), Rep.Some(link), Rep.Some(content), Rep.Some(html), image).shaped.<>({ r => import r._; _1.map(_ => ArticlesRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(guid), Rep.Some(cgid), Rep.Some(title), Rep.Some(description), Rep.Some(pubdate), Rep.Some(link), Rep.Some(content), Rep.Some(html), image).shaped.<>({ r => import r._; _1.map(_ => ArticlesRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column guid SqlType(int8), PrimaryKey */
     val guid: Rep[Long] = column[Long]("guid", O.PrimaryKey)
+    /** Database column cgid SqlType(varchar), Length(20,true) */
+    val cgid: Rep[String] = column[String]("cgid", O.Length(20, varying = true))
     /** Database column title SqlType(varchar), Length(200,true) */
     val title: Rep[String] = column[String]("title", O.Length(200, varying = true))
     /** Database column description SqlType(varchar), Length(2000,true) */
@@ -57,6 +60,9 @@ trait Tables {
     val html: Rep[String] = column[String]("html")
     /** Database column image SqlType(varchar), Length(200,true), Default(None) */
     val image: Rep[Option[String]] = column[Option[String]]("image", O.Length(200, varying = true), O.Default(None))
+
+    /** Index over (cgid) (database name index_articles_cgid) */
+    val index1 = index("index_articles_cgid", cgid)
   }
   /** Collection-like TableQuery object for table Articles */
   lazy val Articles = new TableQuery(tag => new Articles(tag))

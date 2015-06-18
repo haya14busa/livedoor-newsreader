@@ -6,6 +6,7 @@ import models.Tables.ArticlesRow
 
 case class Article(
   guid:        Long,
+  cgid:        String,
   title:       String,
   description: String,
   pubdate:     java.util.Date,
@@ -34,6 +35,7 @@ object RssArticle {
       case (content, html, image) =>
         Article(
           guid = r.guid,
+          cgid = r.cgid,
           title = r.title,
           description = r.description,
           pubdate = r.pubdate,

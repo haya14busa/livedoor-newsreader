@@ -34,6 +34,7 @@ object ArticleDAOConvertion {
   implicit def convertRowToArticle(r: ArticlesRow): Article =
     Article(
       guid = r.guid,
+      cgid = r.cgid,
       title = r.title,
       description = r.description,
       pubdate = r.pubdate,
@@ -46,6 +47,7 @@ object ArticleDAOConvertion {
   implicit def convertArticleToRow(a: Article): ArticlesRow =
     ArticlesRow(
       guid = a.guid,
+      cgid = a.cgid,
       title = a.title,
       description = a.description,
       pubdate = new java.sql.Timestamp(a.pubdate.getTime()),
