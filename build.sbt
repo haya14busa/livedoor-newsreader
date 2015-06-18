@@ -36,7 +36,11 @@ libraryDependencies ++= Seq(
   "com.codeborne" % "phantomjsdriver" % "1.2.1" % "test",
   "org.jsoup" % "jsoup" % "1.7.2",
   evolutions,
-  "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+  "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
+  "com.h2database" % "h2" % "1.4.187", // for test
+  "com.typesafe.slick" %% "slick" % "3.0.0",
+  "com.typesafe.slick" %% "slick-codegen" % "3.0.0",
+  "org.slf4j" % "slf4j-nop" % "1.6.4" // for slick
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
@@ -81,3 +85,19 @@ herokuAppName in Compile := "livedoor-newsreader"
 javaOptions in Test ++= PhantomJs.setup(baseDirectory.value)
 
 javaOptions in Test += "-Dconfig.file=conf/test.conf"
+
+slick <<= slickCodeGenTask // register manual sbt command
+
+sourceGenerators in Compile <+= slickCodeGenTask // register automatic code generation on every compile, remove for only manual use
+
+lazy val slick = TaskKey[Seq[File]]("gen-tables")
+lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runner in Compile, streams) map { (dir, cp, r, s) =>
+  val outputDir = (dir / "slick").getPath
+  val url = "jdbc:postgresql://localhost/livedoornews" // connection info for a pre-populated throw-away, in-memory db for this demo, which is freshly initialized on every run
+  val jdbcDriver = "org.postgresql.Driver"
+  val slickDriver = "slick.driver.PostgresDriver"
+  val pkg = "models"
+  toError(r.run("slick.codegen.SourceCodeGenerator", cp.files, Array(slickDriver, jdbcDriver, url, outputDir, pkg), s.log))
+  val fname = outputDir + "/models/Tables.scala"
+  Seq(file(fname))
+}
