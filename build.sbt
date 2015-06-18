@@ -88,11 +88,13 @@ javaOptions in Test += "-Dconfig.file=conf/test.conf"
 
 slick <<= slickCodeGenTask // register manual sbt command
 
-sourceGenerators in Compile <+= slickCodeGenTask // register automatic code generation on every compile, remove for only manual use
+// sourceGenerators in Compile <+= slickCodeGenTask // register automatic code generation on every compile, remove for only manual use
 
 lazy val slick = TaskKey[Seq[File]]("gen-tables")
 lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runner in Compile, streams) map { (dir, cp, r, s) =>
-  val outputDir = (dir / "slick").getPath
+  // val outputDir = (dir / "slick").getPath
+  // val outputDir = ((baseDirectory in root) / "app").getAbsolutePath
+  val outputDir = "./app" // track output with git for ci & travis...
   val url = "jdbc:postgresql://localhost/livedoornews" // connection info for a pre-populated throw-away, in-memory db for this demo, which is freshly initialized on every run
   val jdbcDriver = "org.postgresql.Driver"
   val slickDriver = "slick.driver.PostgresDriver"
