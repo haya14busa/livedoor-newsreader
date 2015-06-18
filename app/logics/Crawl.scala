@@ -21,17 +21,13 @@ object Crawl {
       val articles: ParSeq[Article] =
         getRssArticles
           .withFilter(a => !(ids contains a.guid)) // filter existing articles
-          .par
-          .flatMap { a =>
-            val r = toArticle(a)
-            r foreach dao.ArticleDAO.insert
-            r
-          }
+          .par.flatMap(toArticle)
       play.Logger.info(s"[Crawler] end scraping articles ${articles.length}")
       if (articles.isEmpty)
         play.Logger.info(s"[Crawler] Do not re-calculate related doc because there are no new documents")
       else {
         calcRelatedArticles(articles, existingArticles)
+        articles foreach dao.ArticleDAO.insert
       }
     }
   }

@@ -10,7 +10,7 @@ object Scraper {
 
   /** Return article text and html */
   def article(guid: Long): Option[(String, String, Option[java.net.URL])] = {
-    Thread.sleep(5000)
+    Thread.sleep(1000)
     play.Logger.info(s"[Scraper] start scraping: $guid")
     val url = s"http://news.livedoor.com/article/detail/$guid/"
     val r = allCatch opt { Jsoup.connect(url).get } flatMap { doc =>
