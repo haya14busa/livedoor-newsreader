@@ -2,22 +2,51 @@ package models
 import play.api.libs.json.Json
 import scala.util.control.Exception.allCatch
 
+import models.Tables.ArticlesRow
+
 case class Article(
   guid:        Long,
   title:       String,
   description: String,
-  pubDate:     java.util.Date,
+  pubdate:     java.util.Date,
   link:        java.net.URL,
   content:     String,
   html:        String,
   image:       Option[java.net.URL]
 )
 
+case class RssArticle(
+  guid:        Long,
+  title:       String,
+  description: String,
+  pubdate:     java.util.Date,
+  link:        java.net.URL
+)
+
+object RssArticle {
+  import utils.json.URL.dateJsonWrites
+  implicit val rssarticleWrites = Json.writes[RssArticle]
+
+  def toArticle(r: RssArticle): Article = {
+    val (content, html, image) = logics.Scraper.article(r.guid).get
+    Article(
+      guid = r.guid,
+      title = r.title,
+      description = r.description,
+      pubdate = r.pubdate,
+      link = r.link,
+      content = content,
+      html = html,
+      image = image
+    )
+  }
+}
+
 case class Feed(
   title:         String,
   description:   String,
   lastBuildDate: Option[java.util.Date],
-  articles:      Seq[Article]
+  articles:      Seq[RssArticle]
 )
 
 object Article {
@@ -28,23 +57,42 @@ object Article {
   def fromXml(item: scala.xml.Node): Option[Article] = allCatch opt {
     val link = new java.net.URL((item \ "link").text)
     val guid = link.getPath.split("/").last.toLong
-    // val (content, html, image) = logics.Scraper.article(guid).get
-    val (content, html, image) = ("content", "html", None) // TODO: do not scrape in dev
+    val (content, html, image) = logics.Scraper.article(guid).get
     Article(
       guid = guid,
       title = (item \ "title").text,
       description = (item \ "description").text,
-      pubDate = utils.Date.parseRFC2822((item \ "pubDate").text),
+      pubdate = (utils.Date.parseRFC2822((item \ "pubDate").text)),
       link = link,
       content = content,
       html = html,
       image = image
     )
   }
+
+  def guid(item: scala.xml.Node): Option[Long] = allCatch opt {
+    val link = new java.net.URL((item \ "link").text)
+    link.getPath.split("/").last.toLong
+  }
+
+  /** Scraping occurs! */
+  def toRssArticle(item: scala.xml.Node): Option[RssArticle] = allCatch opt {
+    val link = new java.net.URL((item \ "link").text)
+    val guid = link.getPath.split("/").last.toLong
+    RssArticle(
+      guid = guid,
+      title = (item \ "title").text,
+      description = (item \ "description").text,
+      pubdate = (utils.Date.parseRFC2822((item \ "pubDate").text)),
+      link = link
+    )
+  }
+
 }
 
 object Feed {
   import utils.json.URL.dateJsonWrites
+  implicit val articleWrites = Json.writes[Article]
   implicit val feedWrites = Json.writes[Feed]
 
   // TODO?: return as Either[Throwable, T]
@@ -54,7 +102,7 @@ object Feed {
       title = (channel \ "title").text,
       description = (channel \ "description").text,
       lastBuildDate = allCatch opt { utils.Date.parseRFC2822((channel \ "lastBuildDate").text) },
-      articles = (channel \ "item").par.map(Article.fromXml).flatten.seq
+      articles = (channel \ "item").par.map(Article.toRssArticle).flatten.seq
     )
   }
 }

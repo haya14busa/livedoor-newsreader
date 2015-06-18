@@ -101,17 +101,3 @@ lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runn
   val fname = outputDir + "/models/Tables.scala"
   Seq(file(fname))
 }
-
-
-lazy val evolution = inputKey[Unit]("Applies evolutions.")
-
-evolution := {
-  import play.api.db.Databases
-  import play.api.db.evolutions.Evolutions
-  val database = Databases(
-    driver = "org.postgresql.Driver",
-    url = "jdbc:postgresql://localhost/livedoornews"
-  )
-  println("=== Evolution Complete ===")
-  configFile.fold(System.clearProperty("config.file"))(System.setProperty("config.file", _))
-}

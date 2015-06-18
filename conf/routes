@@ -17,3 +17,4 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /debug/kuromoji/:text  controllers.Debug.kuromoji(text: String)
 GET     /debug/docvector/:text  controllers.Debug.docvector(text: String)
 GET     /debug/tfidf  controllers.Debug.tfidf
+GET     /debug/article/add  controllers.Debug.addArticles

@@ -1,3 +1,7 @@
+import scala.slick.driver.PostgresDriver.simple._
+import scala.concurrent.ExecutionContext.Implicits.global
+import models.Tables
+
 object Debug {
   def jsoup(guid: Long) = {
     import org.jsoup._
