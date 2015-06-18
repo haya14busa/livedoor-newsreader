@@ -8,8 +8,8 @@ import scala.collection.immutable.Set
 object DocVector {
 
   sealed abstract class Document
-  case class RawDocument(id: Int, body: String) extends Document
-  case class DocumentVector(id: Int, body: String, tfidf: TFIDF) extends Document
+  case class RawDocument(guid: Long, body: String) extends Document
+  case class DocumentVector(guid: Long, body: String, tfidf: TFIDF) extends Document
 
   type TF = Map[String, Int] // term -> term frequency
   type DF = Map[String, Int] // term -> document frequency
@@ -32,7 +32,7 @@ object DocVector {
 
   // n: the number of Documents
   def idf(term: String, dfs: DF, n: Int): Double =
-    dfs.get(term).fold[Double](0)(df => scala.math.log(n / df))
+    dfs.get(term).fold[Double](0)(df => scala.math.log(n.toDouble / df.toDouble))
 
   def tfidf(documents: List[RawDocument]): List[DocumentVector] = {
     val tfs: List[(RawDocument, TF)] = documents.map(doc => (doc, tf(doc)))
@@ -43,9 +43,25 @@ object DocVector {
           val (term: String, tfv: Int) = tuple
           m + (term -> tfv * idf(term, dfMap, documents.length))
         }
-        DocumentVector(id = doc.id, body = doc.body, tfidf = tfidf)
+        DocumentVector(guid = doc.guid, body = doc.body, tfidf = tfidf)
     }
   }
+
+  // Cosine similarity
+  def simcos(a: DocumentVector, b: DocumentVector): Double =
+    product(a, b) / (math.sqrt(product(a, a)) * math.sqrt(product(b, b)))
+
+  def findSimilarDocs(doc: DocumentVector, docs: List[DocumentVector], n: Int = 1): List[DocumentVector] =
+    docs.par.withFilter(d => d.guid != doc.guid).map { d =>
+      (d, simcos(doc, d))
+    }.toList.sortBy(-_._2).map(_._1).take(n)
+
+  def product(a: DocumentVector, b: DocumentVector): Double =
+    a.tfidf.foldLeft[Double](0) { (v, t) =>
+      val (term: String, tfidf: Double) = t
+      val other = b.tfidf.get(term).getOrElse[Double](0)
+      v + (tfidf * other)
+    }
 
 }
 
