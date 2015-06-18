@@ -16,6 +16,11 @@ case class Article(
   image:       Option[java.net.URL]
 )
 
+object Article {
+  import utils.json.URL.dateJsonWrites
+  implicit val articleWrites = Json.writes[Article]
+}
+
 case class RssArticle(
   guid:        Long,
   cgid:        String,
@@ -48,17 +53,21 @@ object RssArticle {
   }
 }
 
+case class FullRSSFeed(category: Category, articles: Seq[Article])
+
+object FullRSSFeed {
+  import utils.json.URL.dateJsonWrites
+  implicit val categoryWrites = Json.writes[Category]
+  implicit val articleWrites = Json.writes[Article]
+  implicit val fullRssFeedWrites = Json.writes[FullRSSFeed]
+}
+
 case class Feed(
   title:         String,
   description:   String,
   lastBuildDate: Option[java.util.Date],
   articles:      Seq[RssArticle]
 )
-
-object Article {
-  import utils.json.URL.dateJsonWrites
-  implicit val articleWrites = Json.writes[Article]
-}
 
 object Feed {
   import utils.json.URL.dateJsonWrites

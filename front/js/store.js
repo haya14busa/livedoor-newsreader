@@ -59,17 +59,13 @@ class Store {
       return this.fetchFeed(cgid)
   }
 
-  getArticles() {
-    if (this.data.articles.length > 0)
-      return returnAsPromise(this.data.articles)
-    else return this.getAll().then(data => {
-      return _.flatten(_.values(data.feed).map(feed => feed.articles))
-    })
-  }
-
   findArticle(guid) {
-    return this.getArticles().then(articles =>
-      articles.find(article => article.guid === guid)
+    var r = this.data.articles.find(article => article.guid === guid)
+    return r ? returnAsPromise(r) : fetch(`/api/article/${guid}`).then(response =>
+      response.json().then(json => {
+        this.data.articles = this.data.articles.concat(json)
+        return json
+      })
     )
   }
 

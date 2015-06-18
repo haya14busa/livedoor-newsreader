@@ -23,6 +23,11 @@ object ArticleDAO {
     db.run(q.result).map(_.headOption)
   }
 
+  def list(cgid: String, limit: Int = 50): Future[List[Article]] = {
+    val q = Articles.filter(a => a.cgid === cgid).take(limit)
+    db.run(q.result).map(_.toList.map(convertRowToArticle))
+  }
+
   def allDocs(): Future[Set[(Long, String)]] =
     db.run(Articles.map(r => (r.guid, r.content)).result).map(_.toSet)
 
