@@ -80,4 +80,4 @@ herokuAppName in Compile := "livedoor-newsreader"
 // For PhantomJs
 javaOptions in Test ++= PhantomJs.setup(baseDirectory.value)
 
-scalacOptions in Test += "-Dconfig.file=conf/test.conf"
+javaOptions in Test += "-Dconfig.file=conf/test.conf"
