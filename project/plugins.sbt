@@ -6,12 +6,6 @@ scalacOptions ++= Seq(
   "-encoding", "utf8"
 )
 
-libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-jdbc" % "2.4.0", // for sbt evolution
-  "com.typesafe.play" %% "play-jdbc-evolutions" % "2.4.0", // for sbt evolution
-  "postgresql" % "postgresql" % "9.1-901-1.jdbc4" // for sbt evolution
-)
-
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.0")
 
