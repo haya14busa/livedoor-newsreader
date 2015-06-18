@@ -23,6 +23,7 @@ class API extends Controller {
   def relatedArticles(guid: String) = TODO
 
   def crawl = Action {
+    logics.Crawl.go()
     Ok("Crawling start")
   }
 

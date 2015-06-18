@@ -11,16 +11,21 @@ object Scraper {
   /** Return article text and html */
   def article(guid: Long): Option[(String, String, Option[java.net.URL])] = {
     Thread.sleep(5000)
-    play.Logger.info(s"start scraping: $guid")
+    play.Logger.info(s"[Scraper] start scraping: $guid")
     val url = s"http://news.livedoor.com/article/detail/$guid/"
-    allCatch opt { Jsoup.connect(url).get } map { doc =>
-      val content = doc.select(".articleBody").asScala.head
-      val image =
-        doc.select(".articleImage img").asScala.headOption.map { elm =>
-          new java.net.URL(elm.attr("src"))
-        }
-      (content.text, content.html, image)
+    val r = allCatch opt { Jsoup.connect(url).get } flatMap { doc =>
+      doc.select("[itemprop=articleBody]").asScala.headOption map { content =>
+        val image =
+          doc.select(".articleImage img").asScala.headOption.map { elm =>
+            new java.net.URL(elm.attr("src"))
+          }
+        (content.text, content.html, image)
+      }
     }
+    if (r.isEmpty) {
+      play.Logger.debug(s"[Scraper] error occurs with $guid")
+    }
+    r
   }
 
 }

@@ -27,18 +27,20 @@ object RssArticle {
   import utils.json.URL.dateJsonWrites
   implicit val rssarticleWrites = Json.writes[RssArticle]
 
-  def toArticle(r: RssArticle): Article = {
-    val (content, html, image) = logics.Scraper.article(r.guid).get
-    Article(
-      guid = r.guid,
-      title = r.title,
-      description = r.description,
-      pubdate = r.pubdate,
-      link = r.link,
-      content = content,
-      html = html,
-      image = image
-    )
+  def toArticle(r: RssArticle): Option[Article] = {
+    logics.Scraper.article(r.guid) map {
+      case (content, html, image) =>
+        Article(
+          guid = r.guid,
+          title = r.title,
+          description = r.description,
+          pubdate = r.pubdate,
+          link = r.link,
+          content = content,
+          html = html,
+          image = image
+        )
+    }
   }
 }
 

@@ -23,6 +23,9 @@ object ArticleDAO {
     db.run(q.result).map(_.headOption)
   }
 
+  def allDocs(): Future[Set[(Long, String)]] =
+    db.run(Articles.map(r => (r.guid, r.content)).result).map(_.toSet)
+
 }
 
 object ArticleDAOConvertion {
