@@ -101,3 +101,24 @@ lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runn
   val fname = outputDir + "/models/Tables.scala"
   Seq(file(fname))
 }
+
+
+lazy val evolution = inputKey[Unit]("Applies evolutions.")
+
+evolution := {
+  import play.api.db.evolutions.OfflineEvolutions
+  import complete.DefaultParsers.{Space, StringBasic, token}
+  val file = (token(Space) ~> token(StringBasic, "evolution configuration file")).?.parsed getOrElse ("application.conf")
+  val evolveDeploy = ((baseDirectory in root).value / "conf" / file).getAbsolutePath
+  println(s"configuration file: $evolveDeploy")
+  println("=== Applying Evolution ===")
+  val configFile = Option(System.getProperty("config.file"))
+  System.setProperty("config.file", s"conf/$file")
+  OfflineEvolutions.applyScript(
+    new java.io.File("."),
+    this.getClass.getClassLoader,
+    "default"
+  )
+  println("=== Evolution Complete ===")
+  configFile.fold(System.clearProperty("config.file"))(System.setProperty("config.file", _))
+}
