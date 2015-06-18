@@ -17,6 +17,9 @@ class Store {
       articles: [],
       relatedArticles: {} // guid: List[RelatedArticle]
     }
+    // NOTE: this is for debug.
+    // it should be called by some cron or Actor
+    fetch('/api/crawl').then(_ => console.log('Updating feed...'))
   }
 
   getAll() {
