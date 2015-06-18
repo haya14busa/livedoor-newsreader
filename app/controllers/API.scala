@@ -22,4 +22,8 @@ class API extends Controller {
   def article(guid: String) = TODO
   def relatedArticles(guid: String) = TODO
 
+  def crawl = Action {
+    Ok("Crawling start")
+  }
+
 }

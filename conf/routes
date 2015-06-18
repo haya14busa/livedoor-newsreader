@@ -10,6 +10,8 @@ GET     /api/feed/:cgid             controllers.API.feed(cgid: String)
 GET     /api/article/:guid          controllers.API.article(guid: String)
 GET     /api/article/:guid/related  controllers.API.relatedArticles(guid: String)
 
+GET     /api/crawl  controllers.API.crawl
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
