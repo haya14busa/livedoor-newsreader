@@ -24,7 +24,7 @@ object ArticleDAO {
   }
 
   def list(cgid: String, limit: Int = 50): Future[List[Article]] = {
-    val q = Articles.filter(a => a.cgid === cgid).take(limit)
+    val q = Articles.filter(a => a.cgid === cgid).sortBy(_.pubdate.desc).take(limit)
     db.run(q.result).map(_.toList.map(convertRowToArticle))
   }
 
