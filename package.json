@@ -35,7 +35,6 @@
   "dependencies": {
     "browser-request": "^0.3.3",
     "gulp-less": "^3.0.3",
-    "lodash": "^3.9.3",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "request": "^2.58.0",

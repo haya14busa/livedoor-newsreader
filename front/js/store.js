@@ -1,7 +1,6 @@
 import request from 'browser-request'
 import "babel/polyfill"
 import 'whatwg-fetch'
-import _ from 'lodash'
 
 function returnAsPromise(data) {
   return new Promise((resolve, reject) => resolve(data))
