@@ -1,4 +1,5 @@
 path = require('path')
+webpack = require('webpack')
 
 dest = './public/_target'
 src = './front'
@@ -41,6 +42,15 @@ module.exports = {
     devtool: 'source-map'
     # devtool: 'inline-source-map'
     # watch: true
+    plugins: [
+      new webpack.optimize.OccurenceOrderPlugin()
+      new webpack.optimize.DedupePlugin()
+      new webpack.optimize.UglifyJsPlugin({
+        compressor: {
+          warnings: false
+        }
+      })
+    ]
 
   watch:
     js: relativeSrcPath + '/js/**'
